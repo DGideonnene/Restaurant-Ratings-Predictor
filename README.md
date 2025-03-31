@@ -1,7 +1,7 @@
 ![Profile](https://github.com/user-attachments/assets/34e4bb7e-7f46-4ebc-99ea-1a9fa5aaa52e)
 
 
-# Predictor Restaurant-Ratings
+# Restaurant Ratings Predictor 
 ![sumup-mn-akTsxIeI-unsplash](https://github.com/user-attachments/assets/6c90f5ea-6651-47ae-8670-ad9732463ce9)
 Imagine having a magical tool that could effortlessly predict restaurant ratings: You just provide some information, it returns an (almost) accurate rating in no time! Well, that is exactly what Machine Learning can do!
 
