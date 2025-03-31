@@ -10,7 +10,7 @@ st.set_page_config(page_title="Restaurant Ratings Predictor", layout="wide")
 
 # Load Model with compatibility options
 try:
-    model = joblib.load("C:/Users/chiom/Documents/Axia Africa Store/web scraping/Capstone Project/Rating_Predictions_rv3.pkl")
+    model = joblib.load("Rating_Predictions_rv3.pkl")
 
 except Exception as e:
     st.error(f"Error loading model: {e}")
