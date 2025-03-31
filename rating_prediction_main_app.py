@@ -14,6 +14,12 @@ except Exception as e:
     st.error(f"Error loading model: {e}")
     st.stop()
 
+# Display the uploaded image
+image_path = "Front_page.jpg"
+if os.path.exists(image_path):
+    st.image(image_path, caption="Restaurant Ratings Prediction", use_container_width=True)
+    # st.image("front_pic.jpg", use_container_width=True)
+
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
@@ -52,6 +58,11 @@ def performance_prediction(input_data):
                     'Has Table booking', 'Has Online delivery', 'Is delivering now',
                     'Switch to order menu', 'Price range', 'Rating color', 'Rating text',
                     'Votes', 'Area']
+    
+    # Convert Yes/No to 1/0
+    for i in [5, 6, 7, 8]:  # Indices for Yes/No inputs
+        input_data[i] = 1 if input_data[i].strip().lower() == "yes" else 0
+    
     input_df = pd.DataFrame([input_data], columns=column_names)
     try:
         pred = model.predict(input_df)
@@ -106,7 +117,6 @@ def main():
                 st.sidebar.error("⚠️ Invalid credentials!")
     
     if st.session_state.logged_in:
-        st.image("Front_page.jpg", use_container_width=True)
         st.title("🍽️ Restaurant Ratings Predictor")
         st.write("Enter details about a restaurant to predict its rating.")
         
@@ -119,10 +129,10 @@ def main():
             ('Latitude', 'e.g., 40.7128'),
             ('Cuisines', 'e.g., Italian, Chinese'), 
             ('Average Cost for two', 'e.g., 50'), 
-            ('Has Table booking', '1(Yes) or 2(No)'),
-            ('Has Online delivery', '1(Yes) or 2(No)'), 
-            ('Is delivering now', '1(Yes) or 2(No)'),
-            ('Switch to order menu', '1(Yes) or 2(No)'), 
+            ('Has Table booking', 'Yes or No'),
+            ('Has Online delivery', 'Yes or No'), 
+            ('Is delivering now', 'Yes or No'),
+            ('Switch to order menu', 'Yes or No'), 
             ('Price range', '1 to 4'), 
             ('Rating color', 'Red, Orange, etc.'),
             ('Rating text', 'Excellent, Good, etc.'), 
