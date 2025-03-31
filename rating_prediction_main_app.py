@@ -106,7 +106,7 @@ def main():
                 st.sidebar.error("⚠️ Invalid credentials!")
     
     if st.session_state.logged_in:
-        st.image("front_pic.jpg", use_container_width=True)
+        st.image("Front_page.jpg", use_container_width=True)
         st.title("🍽️ Restaurant Ratings Predictor")
         st.write("Enter details about a restaurant to predict its rating.")
         
