@@ -5,13 +5,11 @@ import streamlit as st
 import os
 import hashlib
 
-# Ensure set_page_config is the first Streamlit command
 st.set_page_config(page_title="Restaurant Ratings Predictor", layout="wide")
 
-# Load Model with compatibility options
+# Load Model
 try:
     model = joblib.load("Rating_Predictions_rv3.pkl")
-
 except Exception as e:
     st.error(f"Error loading model: {e}")
     st.stop()
@@ -61,22 +59,24 @@ def performance_prediction(input_data):
         prediction = round(prediction_original, 2)
     except Exception as e:
         st.error(f"Prediction error: {e}")
-        return "Error"
-    
+        return "Error", None
+
     if prediction >= 4.5:
-        return "Excellent"
+        rating_category = "Excellent"
     elif 4.0 <= prediction < 4.5:
-        return "Very Good"
+        rating_category = "Very Good"
     elif 3.5 <= prediction < 4.0:
-        return "Good"
+        rating_category = "Good"
     elif 2.5 <= prediction < 3.5:
-        return "Average"
+        rating_category = "Average"
     elif 1.0 <= prediction < 2.5:
-        return "Poor"
+        rating_category = "Poor"
     elif prediction == 0.0:
-        return "Not rated"
+        rating_category = "Not rated"
     else:
-        return "Invalid rating"
+        rating_category = "Invalid rating"
+
+    return rating_category, prediction
 
 def main():
     if 'logged_in' not in st.session_state:
@@ -112,14 +112,26 @@ def main():
         st.subheader("🏢 Restaurant Details")
         col1, col2, col3 = st.columns(3)
         inputs = []
-        fields = ['City', 'Longitude', 'Latitude', 'Cuisines', 'Average Cost for two',
-                  'Has Table booking', 'Has Online delivery', 'Is delivering now',
-                  'Switch to order menu', 'Price range', 'Rating color', 'Rating text',
-                  'Votes', 'Area']
+        fields = [
+            ('City', 'e.g., New York'), 
+            ('Longitude', 'e.g., -74.0060'), 
+            ('Latitude', 'e.g., 40.7128'),
+            ('Cuisines', 'e.g., Italian, Chinese'), 
+            ('Average Cost for two', 'e.g., 50'), 
+            ('Has Table booking', 'Yes or No'),
+            ('Has Online delivery', 'Yes or No'), 
+            ('Is delivering now', 'Yes or No'),
+            ('Switch to order menu', 'Yes or No'), 
+            ('Price range', '1 to 4'), 
+            ('Rating color', 'Red, Orange, etc.'),
+            ('Rating text', 'Excellent, Good, etc.'), 
+            ('Votes', 'e.g., 500'), 
+            ('Area', 'e.g., Manhattan')
+        ]
         
-        for i, field in enumerate(fields):
+        for i, (field, placeholder) in enumerate(fields):
             with [col1, col2, col3][i % 3]:
-                value = st.text_input(f"{field.replace('_', ' ')}", key=field)
+                value = st.text_input(f"{field.replace('_', ' ')}", placeholder=placeholder, key=field)
                 inputs.append(value)
         
         if st.button("🔍 Predict Rating"):
@@ -127,9 +139,12 @@ def main():
                 st.warning("⚠️ Please fill in all fields with valid values.")
             else:
                 try:
-                    prediction = performance_prediction(inputs)
-                    st.subheader("📊 Prediction Result:")
-                    st.write(f"🏆 Predicted Rating: **{prediction}**")
+                    rating_category, prediction_value = performance_prediction(inputs)
+                    if prediction_value is not None:
+                        st.subheader("📊 Prediction Result:")
+                        st.write(f"🏆 Predicted Rating: **{rating_category}** ({prediction_value})")
+                    else:
+                        st.warning("⚠️ Unable to generate a valid prediction.")
                 except ValueError:
                     st.warning("⚠️ Please enter valid values in all fields.")
 
