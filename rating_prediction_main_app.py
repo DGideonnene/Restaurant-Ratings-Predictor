@@ -106,6 +106,7 @@ def main():
                 st.sidebar.error("⚠️ Invalid credentials!")
     
     if st.session_state.logged_in:
+        st.image("front_pic.jpg", use_container_width=True)
         st.title("🍽️ Restaurant Ratings Predictor")
         st.write("Enter details about a restaurant to predict its rating.")
         
@@ -118,10 +119,10 @@ def main():
             ('Latitude', 'e.g., 40.7128'),
             ('Cuisines', 'e.g., Italian, Chinese'), 
             ('Average Cost for two', 'e.g., 50'), 
-            ('Has Table booking', 'Yes or No'),
-            ('Has Online delivery', 'Yes or No'), 
-            ('Is delivering now', 'Yes or No'),
-            ('Switch to order menu', 'Yes or No'), 
+            ('Has Table booking', '1(Yes) or 2(No)'),
+            ('Has Online delivery', '1(Yes) or 2(No)'), 
+            ('Is delivering now', '1(Yes) or 2(No)'),
+            ('Switch to order menu', '1(Yes) or 2(No)'), 
             ('Price range', '1 to 4'), 
             ('Rating color', 'Red, Orange, etc.'),
             ('Rating text', 'Excellent, Good, etc.'), 
