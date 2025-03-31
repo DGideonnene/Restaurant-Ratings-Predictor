@@ -14,10 +14,10 @@ except Exception as e:
     st.error(f"Error loading model: {e}")
     st.stop()
 
-# Display the uploaded image (Reduced Size)
+# Display the uploaded image
 image_path = "Front_page.jpg"
 if os.path.exists(image_path):
-    st.image(image_path, caption="Restaurant Ratings Prediction", width=400)
+    st.image(image_path, caption="Restaurant Ratings Prediction", use_container_width=True)
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -57,6 +57,7 @@ def performance_prediction(input_data):
                     'Has Table booking', 'Has Online delivery', 'Is delivering now',
                     'Switch to order menu', 'Price range', 'Rating color', 'Rating text',
                     'Votes', 'Area']
+    
     input_df = pd.DataFrame([input_data], columns=column_names)
     try:
         pred = model.predict(input_df)
@@ -119,39 +120,44 @@ def main():
         inputs = []
         fields = [
             ('City', 'e.g., New York'), 
-            ('Longitude', 'e.g., -74.0060', 'number'), 
-            ('Latitude', 'e.g., 40.7128', 'number'),
+            ('Longitude', 'e.g., -74.0060'), 
+            ('Latitude', 'e.g., 40.7128'),
             ('Cuisines', 'e.g., Italian, Chinese'), 
-            ('Average Cost for two', 'e.g., 50', 'number'), 
-            ('Has Table booking (1=Yes, 0=No)', '1 or 0', 'number'),
-            ('Has Online delivery (1=Yes, 0=No)', '1 or 0', 'number'), 
-            ('Is delivering now (1=Yes, 0=No)', '1 or 0', 'number'),
-            ('Switch to order menu (1=Yes, 0=No)', '1 or 0', 'number'), 
-            ('Price range', '1 to 4', 'number'), 
+            ('Average Cost for two', 'e.g., 50'), 
+            ('Has Table booking (1 for Yes, 0 for No)', 'Enter 0 or 1'),
+            ('Has Online delivery (1 for Yes, 0 for No)', 'Enter 0 or 1'), 
+            ('Is delivering now (1 for Yes, 0 for No)', 'Enter 0 or 1'),
+            ('Switch to order menu (1 for Yes, 0 for No)', 'Enter 0 or 1'), 
+            ('Price range', '1 to 4'), 
             ('Rating color', 'Red, Orange, etc.'),
             ('Rating text', 'Excellent, Good, etc.'), 
-            ('Votes', 'e.g., 500', 'number'), 
+            ('Votes', 'e.g., 500'), 
             ('Area', 'e.g., Manhattan')
         ]
         
-        for i, (field, placeholder, *datatype) in enumerate(fields):
+        for i, (field, placeholder) in enumerate(fields):
             with [col1, col2, col3][i % 3]:
-                if datatype and datatype[0] == 'number':
-                    value = st.number_input(f"{field}", step=1.0 if '.' in placeholder else 1, key=field)
+                if "1 for Yes, 0 for No" in field:
+                    value = st.number_input(f"{field}", min_value=0, max_value=1, step=1, key=field)
+                elif "e.g." in placeholder and placeholder.replace('e.g., ', '').replace('.', '').isdigit():
+                    value = st.text_input(f"{field}", placeholder=placeholder, key=field)
                 else:
                     value = st.text_input(f"{field}", placeholder=placeholder, key=field)
                 inputs.append(value)
         
         if st.button("🔍 Predict Rating"):
-            if any(v == "" for v in inputs):
+            if "" in inputs:
                 st.warning("⚠️ Please fill in all fields with valid values.")
             else:
-                rating_category, prediction_value = performance_prediction(inputs)
-                if prediction_value is not None:
-                    st.subheader("📊 Prediction Result:")
-                    st.write(f"🏆 Predicted Rating: **{rating_category}** ({prediction_value})")
-                else:
-                    st.warning("⚠️ Unable to generate a valid prediction.")
+                try:
+                    rating_category, prediction_value = performance_prediction(inputs)
+                    if prediction_value is not None:
+                        st.subheader("📊 Prediction Result:")
+                        st.write(f"🏆 Predicted Rating: **{rating_category}** ({prediction_value})")
+                    else:
+                        st.warning("⚠️ Unable to generate a valid prediction.")
+                except ValueError:
+                    st.warning("⚠️ Please enter valid values in all fields.")
 
 if __name__ == '__main__':
     main()
