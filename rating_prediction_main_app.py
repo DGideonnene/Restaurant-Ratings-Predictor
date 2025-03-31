@@ -117,47 +117,38 @@ def main():
         
         st.subheader("🏢 Restaurant Details")
         col1, col2, col3 = st.columns(3)
-        inputs = []
-        fields = [
-            ('City', 'e.g., New York'), 
-            ('Longitude', 'e.g., -74.0060'), 
-            ('Latitude', 'e.g., 40.7128'),
-            ('Cuisines', 'e.g., Italian, Chinese'), 
-            ('Average Cost for two', 'e.g., 50'), 
-            ('Has Table booking (1 for Yes, 0 for No)', 'Enter 0 or 1'),
-            ('Has Online delivery (1 for Yes, 0 for No)', 'Enter 0 or 1'), 
-            ('Is delivering now (1 for Yes, 0 for No)', 'Enter 0 or 1'),
-            ('Switch to order menu (1 for Yes, 0 for No)', 'Enter 0 or 1'), 
-            ('Price range', '1 to 4'), 
-            ('Rating color', 'Red, Orange, etc.'),
-            ('Rating text', 'Excellent, Good, etc.'), 
-            ('Votes', 'e.g., 500'), 
-            ('Area', 'e.g., Manhattan')
-        ]
         
-        for i, (field, placeholder) in enumerate(fields):
-            with [col1, col2, col3][i % 3]:
-                if "1 for Yes, 0 for No" in field:
-                    value = st.number_input(f"{field}", min_value=0, max_value=1, step=1, key=field)
-                elif "e.g." in placeholder and placeholder.replace('e.g., ', '').replace('.', '').isdigit():
-                    value = st.text_input(f"{field}", placeholder=placeholder, key=field)
-                else:
-                    value = st.text_input(f"{field}", placeholder=placeholder, key=field)
-                inputs.append(value)
+        city = st.selectbox("City", options=[...] , index=0, key="City")
+        rating_color = st.selectbox("Rating Color", options=["Dark Green", "Green", "Yellow", "Orange", "White", "Red"], key="Rating color")
+        rating_text = st.selectbox("Rating Text", options=["Excellent", "Very Good", "Good", "Average", "Not rated", "Poor"], key="Rating text")
+        
+        inputs = [
+            city,
+            st.text_input("Longitude", placeholder="e.g., -74.0060", key="Longitude"),
+            st.text_input("Latitude", placeholder="e.g., 40.7128", key="Latitude"),
+            st.text_input("Cuisines", placeholder="e.g., Italian, Chinese", key="Cuisines"),
+            st.text_input("Average Cost for two", placeholder="e.g., 50", key="Average Cost for two"),
+            st.number_input("Has Table booking (1 for Yes, 0 for No)", min_value=0, max_value=1, step=1, key="Has Table booking"),
+            st.number_input("Has Online delivery (1 for Yes, 0 for No)", min_value=0, max_value=1, step=1, key="Has Online delivery"),
+            st.number_input("Is delivering now (1 for Yes, 0 for No)", min_value=0, max_value=1, step=1, key="Is delivering now"),
+            st.number_input("Switch to order menu (1 for Yes, 0 for No)", min_value=0, max_value=1, step=1, key="Switch to order menu"),
+            st.text_input("Price range", placeholder="1 to 4", key="Price range"),
+            rating_color,
+            rating_text,
+            st.text_input("Votes", placeholder="e.g., 500", key="Votes"),
+            st.text_input("Area", placeholder="e.g., Manhattan", key="Area")
+        ]
         
         if st.button("🔍 Predict Rating"):
             if "" in inputs:
                 st.warning("⚠️ Please fill in all fields with valid values.")
             else:
-                try:
-                    rating_category, prediction_value = performance_prediction(inputs)
-                    if prediction_value is not None:
-                        st.subheader("📊 Prediction Result:")
-                        st.write(f"🏆 Predicted Rating: **{rating_category}** ({prediction_value})")
-                    else:
-                        st.warning("⚠️ Unable to generate a valid prediction.")
-                except ValueError:
-                    st.warning("⚠️ Please enter valid values in all fields.")
+                rating_category, prediction_value = performance_prediction(inputs)
+                if prediction_value is not None:
+                    st.subheader("📊 Prediction Result:")
+                    st.write(f"🏆 Predicted Rating: **{rating_category}** ({prediction_value})")
+                else:
+                    st.warning("⚠️ Unable to generate a valid prediction.")
 
 if __name__ == '__main__':
     main()
