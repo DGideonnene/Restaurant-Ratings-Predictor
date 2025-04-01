@@ -116,32 +116,38 @@ def main():
         st.write("Enter details about a restaurant to predict its rating.")
         
         st.subheader("🏢 Restaurant Details")
-        col1, col2, col3 = st.columns(3)
         
-        city_list = [
-            'Makati City', 'Mandaluyong City', 'Pasay City', 'Pasig City', 'Quezon City',
-            'San Juan City', 'Santa Rosa', 'Tagaytay City', 'Taguig City', 'Brasilia',
-            'Rio de Janeiro', 'São Paulo', 'Albany', 'Armidale', 'Athens', 'Augusta',
-            'Balingup', 'Beechworth', 'Boise', 'Cedar Rapids/Iowa City', 'Chatham-Kent',
-            'Clatskanie', 'Cochrane', 'Columbus', 'Consort', 'Dalton', 'Davenport',
-            'Des Moines', 'Dicky Beach', 'Dubuque', 'East Ballina', 'Fernley', 'Flaxton',
-            'Forrest', 'Gainesville', 'Hepburn Springs', 'Huskisson', 'Inverloch',
-            'Lakes Entrance', 'Lakeview', 'Lincoln', 'Lorn', 'Macedon', 'Macon', 'Mayfield',
-            'Mc Millan', 'Middleton Beach', 'Monroe', 'Montville', 'Ojo Caliente', 'Orlando',
-            'Palm Cove', 'Paynesville', 'Penola', 'Pensacola', 'Phillip Island', 'Pocatello',
-            'Potrero', 'Princeton', 'Rest of Hawaii', 'Savannah', 'Singapore', 'Sioux City',
-            'Tampa Bay', 'Tanunda', 'Trentham East', 'Valdosta', 'Vernonia', 'Victor Harbor',
-            'Vineland Station', 'Waterloo', 'Weirton', 'Winchester Bay', 'Yorkton', 'Abu Dhabi',
-            'Dubai', 'Sharjah'
-        ]
-        
+        city_list = [...]
         city = st.selectbox("City", options=sorted(city_list), key="City")
-        rating_color = st.selectbox("Rating Color", options=["Dark Green", "Green", "Yellow", "Orange", "White", "Red"], key="Rating color")
-        rating_text = st.selectbox("Rating Text", options=["Excellent", "Very Good", "Good", "Average", "Not rated", "Poor"], key="Rating text")
+        
+        longitude = st.text_input("Longitude", placeholder="e.g., -74.0060")
+        latitude = st.text_input("Latitude", placeholder="e.g., 40.7128")
+        cuisines = st.text_input("Cuisines", placeholder="e.g., Italian, Chinese")
+        avg_cost = st.text_input("Average Cost for two", placeholder="e.g., 50")
+        table_booking = st.number_input("Has Table booking", min_value=0, max_value=1, step=1)
+        online_delivery = st.number_input("Has Online delivery", min_value=0, max_value=1, step=1)
+        delivering_now = st.number_input("Is delivering now", min_value=0, max_value=1, step=1)
+        switch_order_menu = st.number_input("Switch to order menu", min_value=0, max_value=1, step=1)
+        price_range = st.text_input("Price range", placeholder="1 to 4")
+        rating_color = st.selectbox("Rating Color", ["Dark Green", "Green", "Yellow", "Orange", "White", "Red"])
+        rating_text = st.selectbox("Rating Text", ["Excellent", "Very Good", "Good", "Average", "Not rated", "Poor"])
+        votes = st.text_input("Votes", placeholder="e.g., 500")
+        area = st.text_input("Area", placeholder="e.g., Manhattan")
         
         if st.button("🔍 Predict Rating"):
-            st.subheader("📊 Prediction Result:")
-            st.write("🏆 Predicted Rating: **Excellent** (4.8)")
+            inputs = [city, longitude, latitude, cuisines, avg_cost, table_booking, 
+                      online_delivery, delivering_now, switch_order_menu, price_range, 
+                      rating_color, rating_text, votes, area]
+            
+            if "" in inputs:
+                st.warning("⚠️ Please fill in all fields with valid values.")
+            else:
+                rating_category, prediction_value = performance_prediction(inputs)
+                if prediction_value is not None:
+                    st.subheader("📊 Prediction Result:")
+                    st.write(f"🏆 Predicted Rating: **{rating_category}** ({prediction_value})")
+                else:
+                    st.warning("⚠️ Unable to generate a valid prediction.")
 
 if __name__ == '__main__':
     main()
