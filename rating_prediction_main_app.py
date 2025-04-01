@@ -117,7 +117,22 @@ def main():
         
         st.subheader("🏢 Restaurant Details")
         
-        city_list = [...]
+        city_list = [
+            'Makati City', 'Mandaluyong City', 'Pasay City', 'Pasig City', 'Quezon City',
+            'San Juan City', 'Santa Rosa', 'Tagaytay City', 'Taguig City', 'Brasilia',
+            'Rio de Janeiro', 'São Paulo', 'Albany', 'Armidale', 'Athens', 'Augusta',
+            'Balingup', 'Beechworth', 'Boise', 'Cedar Rapids/Iowa City', 'Chatham-Kent',
+            'Clatskanie', 'Cochrane', 'Columbus', 'Consort', 'Dalton', 'Davenport',
+            'Des Moines', 'Dicky Beach', 'Dubuque', 'East Ballina', 'Fernley', 'Flaxton',
+            'Forrest', 'Gainesville', 'Hepburn Springs', 'Huskisson', 'Inverloch',
+            'Lakes Entrance', 'Lakeview', 'Lincoln', 'Lorn', 'Macedon', 'Macon', 'Mayfield',
+            'Mc Millan', 'Middleton Beach', 'Monroe', 'Montville', 'Ojo Caliente', 'Orlando',
+            'Palm Cove', 'Paynesville', 'Penola', 'Pensacola', 'Phillip Island', 'Pocatello',
+            'Potrero', 'Princeton', 'Rest of Hawaii', 'Savannah', 'Singapore', 'Sioux City',
+            'Tampa Bay', 'Tanunda', 'Trentham East', 'Valdosta', 'Vernonia', 'Victor Harbor',
+            'Vineland Station', 'Waterloo', 'Weirton', 'Winchester Bay', 'Yorkton', 'Abu Dhabi',
+            'Dubai', 'Sharjah'
+        ]
         city = st.selectbox("City", options=sorted(city_list), key="City")
         
         longitude = st.text_input("Longitude", placeholder="e.g., -74.0060")
